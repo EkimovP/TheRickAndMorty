@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Character Details</title>
+	<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+	<div class="container">
+		<div class="card-details" id="cardDetails">
+		</div>
+		<a href="index.html">Back to Characters</a>
+	</div>
+	<script src="dist/script.js"></script>
+	<script>
+		// Получение параметров из URL
+		const urlParams = new URLSearchParams(window.location.search);
+		const characterId = parseInt(urlParams.get('id'));
+		const characterName = urlParams.get('name');
+
+		// Функция для загрузки и отображения информации о персонаже
+		async function loadCharacterDetails() {
+			try {
+				const response = await fetch(`https://rickandmortyapi.com/api/character/${characterId}`);
+				const character = await response.json();
+
+				// Отображение информации о персонаже
+				const cardDetails = document.getElementById('cardDetails');
+				if (cardDetails) {
+					cardDetails.innerHTML = `
+                        <h2>${character.name}</h2>
+                        <img src="${character.image}" alt="${character.name}">
+                        <p>Status: ${character.status}</p>
+                        <p>Species: ${character.species}</p>
+                        <p>Gender: ${character.gender}</p>
+                        <p>Origin: ${character.origin.name}</p>
+                        <p>Location: ${character.location.name}</p>
+                        <p>Number of episodes: ${character.episode.length}</p>
+                    `;
+				}
+			} catch (error) {
+				console.error('Error loading character details:', error);
+			}
+		}
+
+		// Вызов функции загрузки информации о персонаже при загрузке страницы
+		loadCharacterDetails();
+	</script>
+</body>
+
+</html>
